@@ -44,7 +44,7 @@
 | Symptom | Fix |
 |---|---|
 | Push rejected: "secret detected" | A real token is in a committed file (often `.env.example`). Remove it, amend the commit, push again — and consider rotating the token |
-| Render didn't deploy after a push | CI failed (`autoDeployTrigger: checksPass`) — check the commit's GitHub Actions run |
+| Render didn't deploy after a push | Only commits on `main` deploy — check the pull request was merged |
 | Render app slow on first request | Free instances sleep after 15 minutes idle |
 
 More Render-specific checks: [Deploying to Render](deployment-render.md#troubleshooting-on-render).

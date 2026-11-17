@@ -17,8 +17,8 @@ services:
     plan: free # change to a paid plan (e.g. starter) to avoid spin-down after 15 idle minutes
     region: oregon # cannot be changed after creation; keep it the same as the database
     healthCheckPath: /api/health
-    # Deploy only commits whose GitHub Actions checks (.github/workflows/ci.yml) pass.
-    autoDeployTrigger: checksPass
+    # Deploy every commit pushed to the linked branch (main).
+    autoDeployTrigger: commit
     envVars:
       - key: DATABASE_URL
         fromDatabase:

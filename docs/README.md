@@ -17,9 +17,9 @@ order (test mode by default). Guests retrieve bookings later with a private book
 | [Frontend](frontend.md) | Pages, components, state, styling and accessibility |
 | [Configuration](configuration.md) | All environment variables |
 | [Docker](docker.md) | Images, build targets, docker compose, ports |
-| [Deploying to Render](deployment-render.md) | Blueprint deploy, CI gate, environment, free-plan limits |
+| [Deploying to Render](deployment-render.md) | Blueprint deploy, automatic deploys, environment, free-plan limits |
 | [Security & privacy](security.md) | How secrets, personal data, payments and lookups are protected |
-| [Testing & CI](testing.md) | Test suite, what is covered, GitHub Actions |
+| [Testing](testing.md) | Test suite, what is covered, checks to run before merging |
 | [Contributing](contributing.md) | Branch naming, commit messages, workflow |
 | [Troubleshooting](troubleshooting.md) | Common problems and fixes |
 

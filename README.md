@@ -15,7 +15,7 @@ needed.
 - Passenger forms that ask for passports only when the airline requires them
 - Idempotent booking (no double orders), clear pending / confirmed / ticketed / failed states
 - Secure booking lookup with hashed private codes; signed Duffel webhooks
-- Docker setup (database + API + web app) and a one-click Render Blueprint with CI-gated deploys
+- Docker setup (database + API + web app) and a one-click Render Blueprint
 
 ## Quick start (Docker)
 
@@ -51,7 +51,7 @@ Everything is in [`docs/`](docs/README.md):
 | [Database](docs/database.md) | [Duffel integration](docs/duffel-integration.md) |
 | [Frontend](docs/frontend.md) | [Configuration](docs/configuration.md) |
 | [Docker](docs/docker.md) | [Deploying to Render](docs/deployment-render.md) |
-| [Security & privacy](docs/security.md) | [Testing & CI](docs/testing.md) |
+| [Security & privacy](docs/security.md) | [Testing](docs/testing.md) |
 | [Contributing](docs/contributing.md) | [Troubleshooting](docs/troubleshooting.md) |
 
 ## Important

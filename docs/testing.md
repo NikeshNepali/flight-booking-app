@@ -1,4 +1,4 @@
-# Testing & CI
+# Testing
 
 ## Running tests
 
@@ -35,14 +35,20 @@ provider, booking input).
 | `npm run build` | Production builds of both apps |
 | `npm run format` | Prettier formatting |
 
-## Continuous integration
+## Before merging
 
-`.github/workflows/ci.yml` runs on every push and pull request:
+There is no CI service; run the checks yourself before merging a pull request into `main` (Render deploys `main`
+automatically):
 
-1. **Lint, typecheck, test, build** — `npm ci`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`
-2. **Docker images build** — the Render image (`docker build .`) and the compose images (`docker compose build`)
+```bash
+npm run lint && npm run typecheck && npm test && npm run build
+```
 
-Render deploys a commit on `main` only when these checks pass (`autoDeployTrigger: checksPass`).
+If you changed Docker files, also build the images:
+
+```bash
+docker build . && docker compose build
+```
 
 ## Manual end-to-end check
 

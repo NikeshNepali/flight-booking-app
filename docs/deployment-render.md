@@ -32,13 +32,13 @@ container exits and Render keeps the previous deploy live.
    { "success": true, "data": { "status": "ok", "database": "ok", "provider": { "mode": "test", "configured": true } } }
    ```
 
-## Automatic deploys and CI
+## Automatic deploys
 
-`render.yaml` sets `autoDeployTrigger: checksPass`. Every push to `main` runs the GitHub Actions workflow
-(`.github/workflows/ci.yml`: lint, typecheck, tests, production builds, Docker image builds). Render deploys the commit
-**only if those checks pass**. You can also deploy manually from the dashboard (**Manual Deploy**).
+`render.yaml` sets `autoDeployTrigger: commit`: every commit merged into `main` is deployed automatically. There is no
+CI gate, so run the checks locally before merging (see [Testing](testing.md#before-merging)). You can also deploy
+manually from the dashboard (**Manual Deploy**).
 
-Other options for `autoDeployTrigger`: `commit` (deploy on every push) or `off`.
+Other option: `off` (deploy only manually).
 
 ## Environment variables
 
@@ -91,7 +91,7 @@ paid from your real Duffel balance, and travellers are **not** charged by this a
 
 | Symptom | Check |
 |---|---|
-| Deploy didn't start after a push | GitHub Actions failed (see the commit's checks), or the push wasn't to `main` |
+| Deploy didn't start after a push | The change wasn't merged into `main`, or auto-deploy is turned off for the service |
 | Build fails | The Render build log; run `docker build .` locally to reproduce |
 | Deploy fails right after "Database migrations…" | The migration error in the logs; the previous deploy stays live |
 | "Service unavailable" for ~1 minute | Free instance waking up |

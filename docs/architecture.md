@@ -59,7 +59,6 @@ How the pieces are hosted:
 │   ├── Dockerfile, nginx.conf   Web app container (docker compose)
 │   └── docker-entrypoint.sh     Prints the app URL on start
 ├── docs/                        This documentation
-├── .github/workflows/ci.yml     GitHub Actions
 ├── Dockerfile                   API image (target `api`) / all-in-one image (default, Render)
 ├── docker-compose.yml           postgres + backend + frontend
 ├── render.yaml                  Render Blueprint

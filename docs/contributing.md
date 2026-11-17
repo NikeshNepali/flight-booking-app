@@ -7,8 +7,6 @@
 | Rule | Effect |
 |---|---|
 | Pull request required | No direct pushes to `main` — every change goes through a PR |
-| Required checks: `Lint, typecheck, test, build` and `Docker images build` | A PR can only be merged when CI passes |
-| Branch must be up to date | If `main` moved on, update the PR branch (GitHub's **Update branch** button) and let CI run again |
 | Conversations resolved | All review comments must be resolved before merging |
 | No force pushes, no deletion | `main`'s history can't be rewritten or removed |
 | Applies to admins | The rules apply to the repository owner too |
@@ -25,7 +23,6 @@ Work happens on short-lived branches named
 | `fix/` | Bug fixes | `fix/db-reconnect` |
 | `docs/` | Documentation only | `docs/project-documentation` |
 | `chore/` | Tooling, dependencies, config | `chore/update-dependencies` |
-| `ci/` | CI/CD changes | `ci/cache-docker-layers` |
 | `refactor/` | Code changes without behaviour change | `refactor/booking-service` |
 
 ## Commit messages
@@ -39,7 +36,7 @@ fix(db): keep the API running when database connections drop
 docs: add project documentation
 ```
 
-Common types: `feat`, `fix`, `docs`, `chore`, `ci`, `refactor`, `test`. Scopes used here: `backend`, `frontend`,
+Common types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`. Scopes used here: `backend`, `frontend`,
 `database`, `bookings`, `docker`, `deploy`, `db`.
 
 ## Workflow
@@ -56,7 +53,7 @@ git pull
 git checkout -b feature/my-change
 ```
 
-Make changes, then run the checks locally:
+Make changes, then run the checks locally (there is no CI, so this is the only gate before Render deploys):
 
 ```bash
 npm run lint && npm run typecheck && npm test
@@ -72,14 +69,14 @@ git push -u origin feature/my-change
 gh pr create --base main --fill
 ```
 
-When both CI checks are green, merge the PR on GitHub (**Create a merge commit** keeps the branch history, like the
+Merge the PR on GitHub (**Create a merge commit** keeps the branch history, like the
 existing `Merge …` commits) or with:
 
 ```bash
 gh pr merge --merge --delete-branch
 ```
 
-Render deploys `main` after the checks pass on the merge commit. Then update your local copy:
+Render deploys `main` automatically after the merge. Then update your local copy:
 
 ```bash
 git checkout main && git pull
