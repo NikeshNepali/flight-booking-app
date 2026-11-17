@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -17,6 +19,8 @@ export interface AppDependencies {
   webhooks: WebhooksService;
   allowedOrigins: string[];
   health: () => Promise<Record<string, unknown>>;
+  /** Absolute path of the built frontend (frontend/dist). When set, the API also serves the web app. */
+  frontendDist?: string | null;
 }
 
 /** Builds the Express app. Dependencies are injected so tests can use fakes. */
@@ -24,7 +28,18 @@ export function createApp(deps: AppDependencies) {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          // Airline logos are served by Duffel's asset CDN.
+          'img-src': ["'self'", 'data:', 'https://assets.duffel.com'],
+          // Render already redirects to HTTPS; this would break plain-http local Docker runs.
+          'upgrade-insecure-requests': null,
+        },
+      },
+    }),
+  );
   app.use(
     cors({
       origin: (origin, callback) => callback(null, !origin || deps.allowedOrigins.includes(origin)),
@@ -43,6 +58,22 @@ export function createApp(deps: AppDependencies) {
   });
   app.use('/api', createFlightsRouter(deps.flights));
   app.use('/api', createBookingsRouter(deps.bookings));
+
+  // Single-service deployment (Docker/Render): serve the built Vue app from the same origin.
+  const dist = deps.frontendDist;
+  if (dist && existsSync(path.join(dist, 'index.html'))) {
+    // Hashed asset files can be cached forever; index.html must always be revalidated.
+    app.use(
+      '/assets',
+      express.static(path.join(dist, 'assets'), { immutable: true, maxAge: '1y' }),
+    );
+    app.use(express.static(dist, { index: false, maxAge: '1h' }));
+    app.use((req, res, next) => {
+      if (req.method !== 'GET' || req.path.startsWith('/api')) return next();
+      res.setHeader('Cache-Control', 'no-cache');
+      res.sendFile(path.join(dist, 'index.html'));
+    });
+  }
 
   app.use(notFoundHandler);
   app.use(errorHandler);

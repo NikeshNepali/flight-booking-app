@@ -1,0 +1,41 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Creates one Docker web service (API + web app) and a managed PostgreSQL database.
+# Secrets marked `sync: false` are entered in the Render dashboard when you apply the Blueprint.
+services:
+  - type: web
+    name: skyroute
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: skyroute-db
+          property: connectionString
+      - key: DUFFEL_ACCESS_TOKEN
+        sync: false
+      - key: DUFFEL_MODE
+        value: test
+      # Keep false: live orders are only possible with DUFFEL_MODE=live AND this set to true.
+      - key: DUFFEL_LIVE_BOOKINGS_ENABLED
+        value: 'false'
+      - key: DUFFEL_WEBHOOK_SECRET
+        sync: false
+      - key: DUFFEL_TIMEOUT_MS
+        value: '30000'
+      # Optional extra allowed origins (comma separated). The service's own URL is
+      # allowed automatically via RENDER_EXTERNAL_URL.
+      - key: FRONTEND_URL
+        value: ''
+
+databases:
+  - name: skyroute-db
+    plan: free
+    region: oregon
+    databaseName: flightbooking
+    user: flightbooking
+    postgresMajorVersion: '17'

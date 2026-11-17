@@ -17,6 +17,10 @@ const envSchema = z.object({
   DUFFEL_WEBHOOK_SECRET: z.string().trim().default(''),
   DUFFEL_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(30_000),
   FRONTEND_URL: z.string().default('http://localhost:5173'),
+  /** Path to the built frontend; set in the Docker image so one service serves API + web app. */
+  FRONTEND_DIST: z.string().trim().default(''),
+  /** Set automatically by Render to the service's public URL. */
+  RENDER_EXTERNAL_URL: z.string().trim().default(''),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -55,7 +59,7 @@ if (raw.DUFFEL_ACCESS_TOKEN) {
 
 export const env = {
   ...raw,
-  FRONTEND_ORIGINS: raw.FRONTEND_URL.split(',')
+  FRONTEND_ORIGINS: [...raw.FRONTEND_URL.split(','), raw.RENDER_EXTERNAL_URL]
     .map((origin) => origin.trim().replace(/\/$/, ''))
     .filter(Boolean),
   /** Bookings may only be created in test mode, or in live mode with the explicit switch on. */
