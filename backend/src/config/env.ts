@@ -9,6 +9,8 @@ const booleanString = z
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(5000),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
+  DATABASE_SSL: booleanString,
   DUFFEL_ACCESS_TOKEN: z.string().trim().default(''),
   DUFFEL_MODE: z.enum(['test', 'live']).default('test'),
   DUFFEL_LIVE_BOOKINGS_ENABLED: booleanString,
