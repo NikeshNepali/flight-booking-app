@@ -16,5 +16,24 @@ services:
       timeout: 5s
       retries: 10
 
+  # All-in-one local run (database + API + web app): `docker compose up --build`
+  # then open http://localhost:8080. Reads DUFFEL_* settings from backend/.env.
+  # For day-to-day development you can still start only the database: `npm run db:up`.
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - path: backend/.env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/flightbooking
+      NODE_ENV: production
+      PORT: '10000'
+      FRONTEND_URL: http://localhost:8080
+    ports:
+      - '8080:10000'
+
 volumes:
   pgdata:

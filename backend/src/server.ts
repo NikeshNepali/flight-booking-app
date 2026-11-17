@@ -26,6 +26,7 @@ const app = createApp({
     bookings,
   }),
   allowedOrigins: env.FRONTEND_ORIGINS,
+  frontendDist: env.FRONTEND_DIST || null,
   health: async () => {
     let database = 'ok';
     try {
