@@ -3,17 +3,18 @@
   "private": true,
   "version": "1.0.0",
   "description": "Flight search and booking app (Vue 3 + Express + PostgreSQL + Duffel)",
-  "workspaces": ["backend"],
+  "workspaces": ["backend", "frontend"],
   "scripts": {
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
     "db:generate": "npm run db:generate -w backend",
     "db:migrate": "npm run db:migrate -w backend",
     "dev:backend": "npm run dev -w backend",
-    "build": "npm run build -w backend",
-    "typecheck": "npm run typecheck -w backend",
-    "lint": "npm run lint -w backend",
-    "format": "prettier --write \"backend/src/**/*.ts\" \"backend/tests/**/*.ts\"",
+    "dev:frontend": "npm run dev -w frontend",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend",
+    "lint": "npm run lint -w backend && npm run lint -w frontend",
+    "format": "prettier --write \"backend/src/**/*.ts\" \"backend/tests/**/*.ts\" \"frontend/src/**/*.{ts,vue,css}\"",
     "test": "npm run test -w backend"
   },
   "devDependencies": {

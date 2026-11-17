@@ -9,7 +9,7 @@ PostgreSQL + Drizzle ORM, and the [Duffel](https://duffel.com/docs/guides/gettin
 - [x] Backend: Express API, Duffel integration, flight search endpoints
 - [x] Database: PostgreSQL schema and migrations
 - [x] Bookings: Duffel orders stored in PostgreSQL, secure lookup, webhooks
-- [ ] Frontend
+- [x] Frontend: Vue web app (search, results, details, passengers, checkout, confirmation, lookup)
 - [ ] Docker & Render deployment
 
 ## Run locally
@@ -20,6 +20,8 @@ cp backend/.env.example backend/.env   # then set DUFFEL_ACCESS_TOKEN=duffel_tes
 npm run db:up        # PostgreSQL in Docker
 npm run db:migrate
 npm run dev:backend  # http://localhost:5000/api/health
+cp frontend/.env.example frontend/.env
+npm run dev:frontend # http://localhost:5173
 npm test
 ```
 
