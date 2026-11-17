@@ -3,6 +3,17 @@
 > Runs in Duffel **test mode** — search and book freely: no real money is charged and no real tickets are issued.
 > Hosted on Render's free plan, so the first visit after a quiet period can take about a minute to wake up.
 
+> [!NOTE]
+> **This project was built with AI-assisted development.**
+>
+> - **Security has not been reviewed by a human yet.** A manual security check (code review, dependency audit,
+>   penetration testing) still needs to be done, and any findings reported, before using this with real users,
+>   real bookings or real payments.
+> - **Features are still to be added**, for example: collecting payments from travellers, confirmation emails,
+>   pay-later (hold) bookings, user accounts, seat and baggage extras, and live (non-test) mode.
+>
+> Treat it as a working demo, not production-ready software. Issues and pull requests are welcome.
+
 # SkyRoute — Flight Search & Booking
 
 A full-stack flight search and booking app. Search the airlines available through the

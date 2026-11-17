@@ -1,5 +1,10 @@
 # Security & privacy
 
+> [!WARNING]
+> This project was built with AI-assisted development and **has not had a human security review yet**. The measures
+> below describe what was implemented, not a verified audit. A manual review (code, dependencies, infrastructure,
+> penetration testing) still needs to be done and its findings reported before handling real users or payments.
+
 ## Secrets
 
 - The Duffel token and webhook secret exist only on the server (`backend/.env`, or the host's environment variables).
