@@ -1,5 +1,7 @@
 # Deploying to Render
 
+Live deployment: <https://skyroute-uh6w.onrender.com>
+
 The repository includes a [Render Blueprint](https://render.com/docs/blueprint-spec) (`render.yaml`) that creates
 everything in one go:
 

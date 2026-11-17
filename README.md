@@ -1,3 +1,8 @@
+**🌐 Live demo: [https://skyroute-uh6w.onrender.com](https://skyroute-uh6w.onrender.com)**
+
+> Runs in Duffel **test mode** — search and book freely: no real money is charged and no real tickets are issued.
+> Hosted on Render's free plan, so the first visit after a quiet period can take about a minute to wake up.
+
 # SkyRoute — Flight Search & Booking
 
 A full-stack flight search and booking app. Search the airlines available through the
