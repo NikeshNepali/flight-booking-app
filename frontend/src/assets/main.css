@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-white text-slate-900;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-600;
+  }
+}
+
+/* Small set of reusable component classes (Tailwind v4 custom utilities). */
+@utility card {
+  @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primary {
+  @apply btn bg-primary-600 text-white hover:bg-primary-700;
+}
+@utility btn-secondary {
+  @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+@utility btn-ghost {
+  @apply btn text-primary-700 hover:bg-primary-50;
+}
+@utility field-label {
+  @apply mb-1 block text-sm font-medium text-slate-700;
+}
+@utility field-input {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 focus:outline-none aria-[invalid=true]:border-red-500;
+}
+@utility field-error {
+  @apply mt-1 text-xs text-red-600;
+}
+@utility skeleton {
+  @apply animate-pulse rounded-md bg-slate-200;
+}
