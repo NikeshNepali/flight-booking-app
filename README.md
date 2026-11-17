@@ -257,8 +257,22 @@ This starts three containers:
 | `backend` | Express API (applies migrations on start) | internal only, via the frontend |
 | `postgres` | PostgreSQL 17 | `localhost:5432` |
 
+When the frontend starts, its logs print where to open the app:
+
+```
+  ==========================================================
+    SkyRoute is running
+
+    Open the app:      http://localhost:8080
+    API health check:  http://localhost:8080/api/health
+  ==========================================================
+```
+
+`npm run docker:up` starts everything in the background, waits until all containers are healthy and prints the same
+message (`npm run docker:logs` follows the logs). To use another port: `FRONTEND_PORT=3000 docker compose up --build`.
+
 DUFFEL settings come from `backend/.env`. Stop everything with `docker compose down` (add `-v` to also delete the
-database). The same commands are available as `npm run docker:up` / `npm run docker:down`. Containers restart
+database), or `npm run docker:down`. Containers restart
 automatically if they crash, and the backend reconnects by itself if the database restarts.
 
 Render uses the default target of the root `Dockerfile`, which serves the API and web app from a single container
