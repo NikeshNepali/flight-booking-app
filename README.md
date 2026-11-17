@@ -74,9 +74,9 @@ The “private link” on the confirmation page uses a URL fragment (`#code=…`
 
 ```
 .
-├── Dockerfile                  # production image (API + web app)
+├── Dockerfile                  # backend image; default target also bundles the web app (Render)
 ├── render.yaml                 # Render Blueprint (web service + PostgreSQL)
-├── docker-compose.yml          # local all-in-one stack (PostgreSQL + app)
+├── docker-compose.yml          # local stack: postgres + backend + frontend
 ├── package.json                # npm workspaces + convenience scripts
 ├── backend/
 │   ├── drizzle.config.ts
@@ -94,6 +94,8 @@ The “private link” on the confirmation page uses a URL fragment (`#code=…`
 │   │   └── utils/
 │   └── tests/                  # Vitest + supertest, mock Duffel fixtures
 └── frontend/
+    ├── Dockerfile              # nginx image for docker compose
+    ├── nginx.conf
     └── src/
         ├── components/{common,flights,booking}/
         ├── composables/        # airport search, in-memory booking draft
@@ -247,9 +249,34 @@ cp backend/.env.example backend/.env
 docker compose up --build
 ```
 
-This builds the production image, starts PostgreSQL, applies migrations and serves the web app and API together at
-http://localhost:8080 (it reads your `DUFFEL_*` settings from `backend/.env`). Stop it with `docker compose down`
-(add `-v` to also delete the database volume). The same commands are available as `npm run docker:up` / `npm run docker:down`.
+This starts three containers:
+
+| Container | What it runs | Address |
+|---|---|---|
+| `frontend` | Vue app served by nginx; forwards `/api` to the backend | http://localhost:8080 |
+| `backend` | Express API (applies migrations on start) | internal only, via the frontend |
+| `postgres` | PostgreSQL 17 | `localhost:5432` |
+
+DUFFEL settings come from `backend/.env`. Stop everything with `docker compose down` (add `-v` to also delete the
+database). The same commands are available as `npm run docker:up` / `npm run docker:down`. Containers restart
+automatically if they crash, and the backend reconnects by itself if the database restarts.
+
+Render uses the default target of the root `Dockerfile`, which serves the API and web app from a single container
+(cheaper on Render). Docker Compose uses the `api` target plus `frontend/Dockerfile`.
+
+### Connecting a database client (pgAdmin, DBeaver, TablePlus, psql)
+
+| Setting | Value |
+|---|---|
+| Host | `localhost` |
+| Port | `5432` |
+| Database | `flightbooking` |
+| Username | `postgres` |
+| Password | `postgres` |
+
+If your client has a saved server for another project on `localhost:5432` (for example a `django_user` login), it will
+fail against this database: only one Postgres can use port 5432 at a time, and this one only has the `postgres` user.
+Add a new server with the settings above.
 
 ---
 
@@ -289,6 +316,8 @@ http://localhost:8080 (it reads your `DUFFEL_*` settings from `backend/.env`). S
 | Server exits with “is not a test token” | Your token doesn't match `DUFFEL_MODE`. Use a `duffel_test_…` token in test mode. |
 | “provider rejected our credentials” | The token was revoked or copied incorrectly; create a new one. |
 | `database: "unavailable"` in `/api/health`, or migrate fails with `ECONNREFUSED` | Start Postgres with `npm run db:up` and check `DATABASE_URL`. |
+| pgAdmin/another client says `password authentication failed for user "…"` | It is using another project's login. Connect with `postgres` / `postgres` to database `flightbooking` (see *Connecting a database client*). |
+| Port 5432 already in use | Another Postgres (Homebrew, or another project's container) is running. Stop it, or change the left side of `'5432:5432'` in `docker-compose.yml` and your `DATABASE_URL`. |
 | Port 5000 already in use (macOS) | macOS AirPlay Receiver uses port 5000. Turn it off in System Settings → General → AirDrop & Handoff, or set `PORT=5050` in `backend/.env` **and** `VITE_API_BASE_URL=http://localhost:5050/api` in `frontend/.env`. |
 | “Cannot reach the server” in the UI | The backend isn't running, or `VITE_API_BASE_URL` / `FRONTEND_URL` don't match your ports (CORS). |
 | Searches are slow | Offer requests ask many airlines; up to ~20 s is normal. `DUFFEL_TIMEOUT_MS` controls the limit. |

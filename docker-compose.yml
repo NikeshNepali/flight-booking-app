@@ -1,7 +1,15 @@
+# Local Docker setup — three containers:
+#   postgres  database            localhost:5432 (user postgres / password postgres / db flightbooking)
+#   backend   Express API         reachable from the frontend container (not published)
+#   frontend  Vue app via nginx   http://localhost:8080 (proxies /api to backend)
+#
+# Everything:          docker compose up --build
+# Only the database:   npm run db:up   (for local development with npm run dev:*)
 services:
   postgres:
     image: postgres:17-alpine
     container_name: flightbooking-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -16,24 +24,35 @@ services:
       timeout: 5s
       retries: 10
 
-  # All-in-one local run (database + API + web app): `docker compose up --build`
-  # then open http://localhost:8080. Reads DUFFEL_* settings from backend/.env.
-  # For day-to-day development you can still start only the database: `npm run db:up`.
-  app:
-    build: .
+  backend:
+    build:
+      context: .
+      target: api
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+    # DUFFEL_* settings come from backend/.env; the values below override the rest.
     env_file:
       - path: backend/.env
         required: false
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/flightbooking
+      DATABASE_SSL: 'false'
       NODE_ENV: production
       PORT: '10000'
       FRONTEND_URL: http://localhost:8080
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
     ports:
-      - '8080:10000'
+      - '8080:80'
 
 volumes:
   pgdata:
