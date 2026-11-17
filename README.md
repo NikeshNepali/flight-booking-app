@@ -8,7 +8,7 @@ PostgreSQL + Drizzle ORM, and the [Duffel](https://duffel.com/docs/guides/gettin
 
 - [x] Backend: Express API, Duffel integration, flight search endpoints
 - [x] Database: PostgreSQL schema and migrations
-- [ ] Bookings
+- [x] Bookings: Duffel orders stored in PostgreSQL, secure lookup, webhooks
 - [ ] Frontend
 - [ ] Docker & Render deployment
 
@@ -31,4 +31,7 @@ GET  /api/airports?query=London
 POST /api/flights/search
 GET  /api/flights/offer-requests/:id/offers?after=...
 GET  /api/flights/offers/:offerId
+POST /api/bookings
+POST /api/bookings/lookup
+POST /api/webhooks/duffel
 ```
