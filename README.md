@@ -4,15 +4,7 @@
 > Hosted on Render's free plan, so the first visit after a quiet period can take about a minute to wake up.
 
 > [!NOTE]
-> **This project was built with AI-assisted development.**
->
-> - **Security has not been reviewed by a human yet.** A manual security check (code review, dependency audit,
->   penetration testing) still needs to be done, and any findings reported, before using this with real users,
->   real bookings or real payments.
-> - **Features are still to be added**, for example: collecting payments from travellers, confirmation emails,
->   pay-later (hold) bookings, user accounts, seat and baggage extras, and live (non-test) mode.
->
-> Treat it as a working demo, not production-ready software. Issues and pull requests are welcome.
+> A human check of this project against the related coursework should be done.
 
 # SkyRoute — Flight Search & Booking
 
