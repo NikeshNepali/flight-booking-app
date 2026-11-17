@@ -3,12 +3,16 @@
   "private": true,
   "version": "1.0.0",
   "description": "Flight search and booking app (Vue 3 + Express + PostgreSQL + Duffel)",
-  "workspaces": ["backend", "frontend"],
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
-    "docker:up": "docker compose up --build --remove-orphans",
+    "docker:up": "docker compose up -d --build --remove-orphans --wait && docker compose logs --no-log-prefix frontend | grep -A4 'SkyRoute is running'",
     "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
     "db:generate": "npm run db:generate -w backend",
     "db:migrate": "npm run db:migrate -w backend",
     "dev:backend": "npm run dev -w backend",

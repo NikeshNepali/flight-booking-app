@@ -18,6 +18,9 @@ RUN npm run build -w frontend
 FROM nginx:1.27-alpine
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/frontend/dist /usr/share/nginx/html
+# Prints the app URL in the container logs on start.
+COPY --chmod=755 frontend/docker-entrypoint.sh /docker-entrypoint.d/99-print-app-url.sh
+ENV APP_URL=http://localhost:8080
 EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -qO- http://127.0.0.1/ >/dev/null || exit 1
