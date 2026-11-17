@@ -1,40 +1,48 @@
-# Render Blueprint: https://render.com/docs/blueprint-spec
-# Creates one Docker web service (API + web app) and a managed PostgreSQL database.
-# Secrets marked `sync: false` are entered in the Render dashboard when you apply the Blueprint.
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Creates:
+#   skyroute     Docker web service: API + built web app in one container
+#                (default target of ./Dockerfile; migrations run on start)
+#   skyroute-db  Managed PostgreSQL, connected over Render's private network
+#
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repository.
+# Values marked `sync: false` are asked for once, when the Blueprint is first applied.
+# Full guide: docs/deployment-render.md
 services:
   - type: web
     name: skyroute
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    plan: free
-    region: oregon
+    plan: free # change to a paid plan (e.g. starter) to avoid spin-down after 15 idle minutes
+    region: oregon # cannot be changed after creation; keep it the same as the database
     healthCheckPath: /api/health
-    autoDeploy: true
+    # Deploy only commits whose GitHub Actions checks (.github/workflows/ci.yml) pass.
+    autoDeployTrigger: checksPass
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: skyroute-db
-          property: connectionString
+          property: connectionString # internal (private network) URL, no TLS needed
       - key: DUFFEL_ACCESS_TOKEN
-        sync: false
+        sync: false # paste your duffel_test_… token when prompted
       - key: DUFFEL_MODE
         value: test
       # Keep false: live orders are only possible with DUFFEL_MODE=live AND this set to true.
       - key: DUFFEL_LIVE_BOOKINGS_ENABLED
         value: 'false'
       - key: DUFFEL_WEBHOOK_SECRET
-        sync: false
+        sync: false # optional; leave empty until you create a webhook in Duffel
       - key: DUFFEL_TIMEOUT_MS
         value: '30000'
       # Optional extra allowed origins (comma separated). The service's own URL is
-      # allowed automatically via RENDER_EXTERNAL_URL.
+      # allowed automatically through RENDER_EXTERNAL_URL, which Render sets.
       - key: FRONTEND_URL
         value: ''
 
 databases:
   - name: skyroute-db
-    plan: free
+    plan: free # free databases expire after 30 days; only one free database per workspace
     region: oregon
     databaseName: flightbooking
     user: flightbooking
