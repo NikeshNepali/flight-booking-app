@@ -1,0 +1,21 @@
+{
+  "name": "flight-booking-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Flight search and booking app (Vue 3 + Express + PostgreSQL + Duffel)",
+  "workspaces": ["backend"],
+  "scripts": {
+    "dev:backend": "npm run dev -w backend",
+    "build": "npm run build -w backend",
+    "typecheck": "npm run typecheck -w backend",
+    "lint": "npm run lint -w backend",
+    "format": "prettier --write \"backend/src/**/*.ts\" \"backend/tests/**/*.ts\"",
+    "test": "npm run test -w backend"
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
